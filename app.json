@@ -1,0 +1,15 @@
+{
+  "name": "Predictive Emotion Service API",
+  "description": "API for Einstein powered service for predicting emotions from heartbeats",
+  "keywords": [
+    "predictive-emotion-service",
+    "pes",
+    "emotion",
+    "api",
+    "hearbeat"
+  ],
+  "image": "heroku/go:1.6",
+  "mount_dir": "src/pes",
+  "website": "https://github.com/18thletter/predictive-emotion-service-api",
+  "repository": "https://github.com/18thletter/predictive-emotion-service-api"
+}
