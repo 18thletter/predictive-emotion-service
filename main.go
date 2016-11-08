@@ -20,13 +20,9 @@ func main() {
 	router.LoadHTMLGlob("templates/*.tmpl.html")
 	router.Static("/static", "static")
 
+	// Serve the docs page
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
-
-	// Serve the docs page
-	router.GET("/docs", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "docs.tmpl.html", nil)
 	})
 
 	// Group v1 API resources
