@@ -1,0 +1,275 @@
+FORMAT: 1A
+HOST: http://predictive-emotion-service-api.herokuapp.com
+
+# Predictive Emotion Service
+
+Artificial Intelligence (AI) is already part of our lives. Whenever you pick up
+your smartphone, you’re already seeing what AI can do for you, from tailored 
+recommendations to relevant search results. With the Salesforce Predictive 
+Emotion Service, you can build AI into your Salesforce org or apps without 
+needing a Stanford PhD.
+
+The Predictive Emotion Service is part of the Einstein suite of technologies, 
+and you can use it to AI-enable your apps. The Predictive Emotion Service takes 
+data from heartbeats of a person, learns about how those correlate with that 
+person's emotive state, and predicts whether the person is happy, sad, angry, 
+or excited to an 87% accuracy.
+
+You can use the service to ascertain mood data from heartbeat data. It analyzes 
+small variations in heartbeat intervals to determine levels of emotion.
+
+Out of the box, Predictive Emotion Service already provides datasets for anger,
+sadness, excitement, and happiness. More can be added by uploading heartbeat
+datasets and labeling with emotions.
+
+## Dataset Collection [/v1/datasets]
+
+Datasets contain heartbeat data associated with an emotion label and a time.
+
+### Create a Dataset [POST]
+
+Create a new dataset with an emotion and time.
+
++ Request (application/json)
+
+        {
+            "emotion": "happy",
+            "time": "2016-11-06T16:51:41.000+0000"
+        }
+
++ Response 201 (application/json)
+
+            {
+                "id": 12,
+                "createdAt": "2016-11-06T16:51:41.000+0000",
+                "updatedAt": "2016-11-06T16:51:41.000+0000",
+                "emotion": "happy"
+            }
+            
++ Response 400 (application/json)
+
+            {
+            }
+
+### List Datasets [GET]
+
+List all datasets. Predictive Emotion Service comes with 4 pre-trained
+datasets: happy, sad, angry, and excited.
+
++ Response 200 (application/json)
+
+            {
+                "datasets": [
+                    {
+                        "id": 12,
+                        "createdAt": "2016-11-06T16:51:41.000+0000",
+                        "updatedAt": "2016-11-06T16:51:41.000+0000",
+                        "emotion": "happy"
+                    },
+                    {
+                        "id": 13,
+                        "createdAt": "2016-11-06T20:42:31.000+0000",
+                        "updatedAt": "2016-11-06T20:42:31.000+0000",
+                        "emotion": "sad"
+                    },
+                    {
+                        "id": 14,
+                        "createdAt": "2016-11-06T20:45:02.000+0000",
+                        "updatedAt": "2016-11-06T20:45:02.000+0000",
+                        "emotion": "angry"
+                    },
+                    {
+                        "id": 15,
+                        "createdAt": "2016-11-06T20:58:14.000+0000",
+                        "updatedAt": "2016-11-06T20:58:14.000+0000",
+                        "emotion": "excited"
+                    }
+                ]
+            }
+        
++ Response 400 (application/json)
+
+            {
+            }
+            
+## Dataset [/v1/datasets/{dataset_id}]
+
++ Parameters
+    + dataset_id (number) - ID of the dataset to get
+
+### Get a Dataset [GET]
+
+Get a dataset by its ID.
+
++ Response 200 (application/json)
+
+            {
+                "id": 12,
+                "createdAt": "2016-11-06T16:51:41.000+0000",
+                "updatedAt": "2016-11-06T16:51:41.000+0000",
+                "emotion": "happy"
+            }
+
++ Response 400 (application/json)
+
+            {
+            }
+            
+## Heartbeats [/v1/heartbeats]
+
+Hearbeats are the data used for mood prediction. They are composed of two
+timestamps, the heartbeat's beginning, and its finish times.
+
+These two timestamps are used to calculate a heartbeats' wavelength, frequency,
+and intervals. The variations in the intervals are used to predict emotion.
+
+### Create Hearbeats [POST]
+
+Add one more many hearbeats. These are automatically attached to a dataset
+according to the timestamp.
+
++ Request (application/json)
+
+            {
+                "heartbeats": [
+                    {
+                        "heartbeat_start_time": "2016-11-06T21:47:52.147+2235",
+                        "hearbeat_end_time": "2016-11-06T21:47:52.346+2547"
+                    },
+                    {
+                        "heartbeat_start_time": "2016-11-06T21:47:53.723+6478",
+                        "hearbeat_end_time": "2016-11-06T21:47:53.889+3572"
+                    },
+                    {
+                        "heartbeat_start_time": "2016-11-06T21:47:55.223+2893",
+                        "hearbeat_end_time": "2016-11-06T21:47:55.347+1498"
+                    },
+                    {
+                        "heartbeat_start_time": "2016-11-06T21:47:55.223+2893",
+                        "hearbeat_end_time": "2016-11-06T21:47:55.402+3422"
+                    }
+                ]
+            }
+        
++ Response 204
+
++ Response 400 (application/json)
+
+            {
+            }
+
+## Emotions [/v1/emotions]
+
+Emotions are labels for datasets. "sad", "happy", "angry", "excited" are
+pre-trained datasets already included with Predictive Emotion Service. More
+emotions can be added, and data can also be added to the 4 existing datasets.
+
+Best practices on emotion naming: emotions should be named "I am feeling ...".
+
+### Create an emotion [POST]
+
+Creates a new emotion.
+
++ Request (application/json)
+
+            {
+                "emotion": "surprise"
+            }
+
+
++ Response 204
+
++ Response 400
+
+            {
+            }
+
+### Get Emotions [GET]
+
+Gets a list of emotions.
+
++ Response 200 (application/json)
+
+            {
+                "emotions": [
+                    "sad",
+                    "happy",
+                    "angry",
+                    "excited"
+                ]
+            }
+
+## Corrections [/v1/correct]
+
+A prediction that is made on a dataset returns an emotion. If the prediction
+is incorrect, it can be amended using this endpoint
+
+### Correct a Prediction [POST]
+
+Corrects a prediction.
+
+If the emotion that is passed already exists, then the relevant dataset is
+labeled with the corrected emotion. If the emotion that is passed does not
+exist yet, a new dataset is created labeled with the new emotion.
+
++ Request (application/json)
+
+            {
+                "dataset_id": 15,
+                "emotion": "nervous"
+            }
+
++ Response 200 (application/json)
+
+            {
+                "dataset_id": 15,
+                "createdAt": "2016-11-06T17:51:41.000+0000",
+                "updatedAt": "2016-11-06T22:40:32.000+0000",
+                "emotion": "nervous"
+            }
+            
++ Response 201 (application/json)
+
+            {
+                "dataset_id": 16,
+                "createdAt": "2016-11-06T22:40:32.000+0000",
+                "updatedAt": "2016-11-06T22:40:32.000+0000",
+                "emotion": "nervous"
+            }
+
++ Response 400 (application/json)
+
+            {
+            }
+
+## Predictions [/v1/predict]
+
+Predictions use heartbeat datasets to predict a user's emotion.
+
+### Get a Prediction [GET]
+
+Gets a prediction. The timestamp of the HTTP call is used as the timestamp
+to identify which dataset to make the prediction from.
+
+A set of emotions is returned with associated probabilities.
+
++ Response 200 (application/json)
+
+            {
+                "probabilities": [
+                    {
+                        "emotion": "happy",
+                        "probability": 0.89235434553222346
+                    },
+                    {
+                        "emotion": "satisfaction",
+                        "probability": 0.10102234422334825
+                    }
+                ]
+            }
+
++ Response 400 (application/json)
+
+            {
+            }
+            }
