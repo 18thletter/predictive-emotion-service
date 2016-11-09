@@ -102,16 +102,24 @@ func GetAllDatasets(c *gin.Context) {
 
 func CreateDataset(c *gin.Context) {
 	var json Dataset
+	var datasetId int
+	var emotion string
+	var createdAt time.Time
+	var updatedAt time.Time
+
 	if c.BindJSON(&json) == nil {
-		var datasetId int
-		var emotion string
-		var createdAt time.Time
-		var updatedAt time.Time
+		now := time.Now()
 		row := db.QueryRow(`INSERT INTO datasets(created_at, updated_at, emotion)
-			VALUES ($1,$2,$3)`, time.Now(), time.Now(), json.Emotion)
+			VALUES ($1,$2,$3)`, now, now, json.Emotion)
 		row.Scan(&datasetId, &createdAt, &updatedAt, &emotion)
 	}
-	c.JSON(http.StatusOK, gin.H{})
+
+	c.JSON(http.StatusOK, gin.H{
+		"id": datasetId,
+		"createdAt": createdAt,
+		"updatedAt": updatedAt,
+		"emotion": emotion,
+	})
 }
 
 func GetDataset(c *gin.Context) {
