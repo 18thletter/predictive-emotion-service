@@ -110,7 +110,7 @@ func CreateDataset(c *gin.Context) {
 	if c.BindJSON(&json) == nil {
 		now := time.Now()
 		row := db.QueryRow(`INSERT INTO datasets(created_at, updated_at, emotion)
-			VALUES ($1,$2,$3)`, now, now, json.Emotion)
+			VALUES ($1,$2,$3) RETURNING *`, now, now, json.Emotion)
 		row.Scan(&datasetId, &createdAt, &updatedAt, &emotion)
 	}
 
