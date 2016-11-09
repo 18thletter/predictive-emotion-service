@@ -57,7 +57,7 @@ func migrateFunc(c *gin.Context) {
 				emotion character varying(255)
 			)
 		`); err != nil {
-		c.String(http.StatusInternalServerError,
+		c.JSON(http.StatusInternalServerError,
 			fmt.Sprintf("Error creating database table: %q", err))
 		return
 	}
@@ -69,7 +69,7 @@ func migrateFunc(c *gin.Context) {
 				end_time timestamp
 			)
 		`); err != nil {
-		c.String(http.StatusInternalServerError,
+		c.JSON(http.StatusInternalServerError,
 			fmt.Sprintf("Error creating database table: %q", err))
 		return
 	}
@@ -79,10 +79,10 @@ func migrateFunc(c *gin.Context) {
 				id serial PRIMARY KEY,
 				created_at timestamp,
 				updated_at timestamp,
-				emotion_id REFERENCES emotions (id)
+				emotion_id int REFERENCES emotions (id)
 			)
 		`); err != nil {
-		c.String(http.StatusInternalServerError,
+		c.JSON(http.StatusInternalServerError,
 			fmt.Sprintf("Error creating database table: %q", err))
 		return
 	}
@@ -114,8 +114,8 @@ func migrateFunc(c *gin.Context) {
 	// 			fmt.Sprintf("Error scanning ticks: %q", err))
 	// 		return
 	// 	}
-	// 	c.String(http.StatusOK, fmt.Sprintf("Read from DB: %s\n", tick.String()))
 	// }
+	c.JSON(http.StatusOK, "{}")
 }
 
 func GetAllDatasets(c *gin.Context) {
