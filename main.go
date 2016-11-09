@@ -94,7 +94,7 @@ type DatasetJson struct {
 }
 
 func GetAllDatasets(c *gin.Context) {
-	var json DatasetJson
+	// var json DatasetJson
 	// if c.BindJSON(&json) == nil {
 	// 	db.QueryRow(`INSERT INTO datasets(created_at, updated_at)`)
 	// }
