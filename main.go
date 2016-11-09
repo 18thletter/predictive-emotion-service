@@ -65,8 +65,8 @@ func migrateFunc(c *gin.Context) {
 	if _, err := db.Exec(`
 			CREATE TABLE IF NOT EXISTS heartbeats (
 				id serial PRIMARY KEY,
-				start timestamp,
-				end timestamp
+				start_time timestamp,
+				end_time timestamp
 			)
 		`); err != nil {
 		c.String(http.StatusInternalServerError,
