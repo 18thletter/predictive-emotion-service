@@ -75,7 +75,7 @@ func initDb() {
 			id serial PRIMARY KEY,
 			created_at timestamp,
 			updated_at timestamp,
-			emotion_id character varying(255) REFERENCES emotions (emotion)
+			emotion character varying(255) REFERENCES emotions (emotion)
 		)
 	`)
 	checkErr(err, "Error creating table")
