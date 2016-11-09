@@ -36,7 +36,7 @@ func main() {
 	})
 
 	// Database migrations (heroku)
-	router.POST("/migrate", MigrateFunc)
+	// router.POST("/migrate", MigrateFunc)
 
 	// Group v1 API resources
 	v1 := router.Group("/v1")
@@ -67,6 +67,7 @@ func initDb() *gorp.DbMap {
 	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 
 	dbmap.AddTableWithName(Dataset{}, "datasets").SetKeys(true, "Id")
+	dbmap.AddTableWithName(Heartbeat{}, "heartbeats").SetKeys(true, "Id")
 
 	err = dbmap.CreateTablesIfNotExists()
 	checkErr(err, "Failed to initialize database.")
@@ -86,6 +87,12 @@ type Dataset struct {
 	Created int64 `db:created_at`
 	Updated int64 `db:updated_at`
 	EmotionId int64 `db:emotion_id`
+}
+
+type Heartbeat struct {
+	Id int64 `db:id`
+	StartTime int64 `db:start_time`
+	EndTime int64 `db:end_time`
 }
 
 // Create the database tables
