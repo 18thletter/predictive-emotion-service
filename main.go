@@ -116,8 +116,8 @@ func CreateDataset(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"id": datasetId,
-		"createdAt": createdAt
-		"updatedAt": updatedAt
+		"createdAt": createdAt,
+		"updatedAt": updatedAt,
 		"emotion": emotion,
 	})
 }
