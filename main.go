@@ -56,8 +56,7 @@ func initDb() {
 
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS emotions (
-			id serial PRIMARY KEY,
-			emotion character varying(255)
+			emotion character varying(255) PRIMARY KEY
 		)
 	`)
 	checkErr(err, "Error creating table")
@@ -76,7 +75,7 @@ func initDb() {
 			id serial PRIMARY KEY,
 			created_at timestamp,
 			updated_at timestamp,
-			emotion_id int REFERENCES emotions (id)
+			emotion_id character varying(255) REFERENCES emotions (emotion)
 		)
 	`)
 	checkErr(err, "Error creating table")
@@ -88,7 +87,17 @@ func checkErr(err error, msg string) {
 	}
 }
 
+// Dataset binding from JSON
+type DatasetJson struct {
+	Emotion string `json:"emotion" binding:"required"`
+	Time string `json:"time" binding:"required"`
+}
+
 func GetAllDatasets(c *gin.Context) {
+	var json DatasetJson
+	// if c.BindJSON(&json) == nil {
+	// 	db.QueryRow(`INSERT INTO datasets(created_at, updated_at)`)
+	// }
 	c.JSON(http.StatusOK, gin.H{})
 }
 
