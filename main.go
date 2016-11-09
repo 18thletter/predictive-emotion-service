@@ -93,6 +93,10 @@ type DatasetJson struct {
 	Time string `json:"time" binding:"required"`
 }
 
+type Emotion struct {
+	emotion string `json:"emotion" binding:"required"`
+}
+
 func GetAllDatasets(c *gin.Context) {
 	// var json DatasetJson
 	// if c.BindJSON(&json) == nil {
@@ -114,7 +118,11 @@ func CreateHeartbeat(c *gin.Context) {
 }
 
 func CreateEmotion(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var json Emotion
+	if c.BindJSON(&json) == nil {
+		db.QueryRow("INSERT INTO emotions(emotion) VALUES($1)", json.emotion)
+	}
+	c.JSON(http.StatusOK, gin.H{"emotion": json.emotion})
 }
 
 func GetAllEmotions(c *gin.Context) {
