@@ -56,16 +56,16 @@ func main() {
 
 func MigrateFunc(c *gin.Context) {
 
-	// if _, err := db.Exec(`
-	// 		CREATE TABLE IF NOT EXISTS emotions (
-	// 			id serial PRIMARY KEY,
-	// 			emotion character varying(255)
-	// 		)
-	// 	`); err != nil {
-	// 	c.JSON(http.StatusInternalServerError,
-	// 		fmt.Sprintf("Error creating database table: %q", err))
-	// 	return
-	// }
+	if _, err := db.Exec(`
+			CREATE TABLE IF NOT EXISTS emotions (
+				id serial PRIMARY KEY,
+				emotion character varying(255)
+			)
+		`); err != nil {
+		c.JSON(http.StatusInternalServerError,
+			fmt.Sprintf("Error creating database table: %q", err))
+		return
+	}
 	//
 	// if _, err := db.Exec(`
 	// 		CREATE TABLE IF NOT EXISTS heartbeats (
