@@ -20,6 +20,7 @@ func main() {
 	}
 
 	// Initialize the database
+	initDb()
 
 	router := gin.New()
 	router.Use(gin.Logger())
