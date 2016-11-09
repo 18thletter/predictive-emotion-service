@@ -56,25 +56,25 @@ func initDb() {
 
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS emotions (
-			emotion character varying(255) PRIMARY KEY
+			emotion character varying(255) PRIMARY KEY NOT NULL
 		)
 	`)
 	checkErr(err, "Error creating table")
 
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS heartbeats (
-			id serial PRIMARY KEY,
-			start_time timestamp,
-			end_time timestamp
+			id serial PRIMARY KEY NOT NULL,
+			start_time timestamp NOT NULL,
+			end_time timestamp NOT NULL
 		)
 	`)
 	checkErr(err, "Error creating table")
 
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS datasets (
-			id serial PRIMARY KEY,
-			created_at timestamp,
-			updated_at timestamp,
+			id serial PRIMARY KEY NOT NULL,
+			created_at timestamp NOT NULL,
+			updated_at timestamp NOT NULL,
 			emotion character varying(255) REFERENCES emotions (emotion)
 		)
 	`)
