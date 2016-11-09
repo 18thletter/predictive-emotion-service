@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -87,10 +88,8 @@ func checkErr(err error, msg string) {
 	}
 }
 
-// Dataset binding from JSON
-type DatasetJson struct {
+type Dataset struct {
 	Emotion string `form:"emotion" json:"emotion" binding:"required"`
-	Time string `form:"emotion" json:"time" binding:"required"`
 }
 
 type Emotion struct {
@@ -98,14 +97,20 @@ type Emotion struct {
 }
 
 func GetAllDatasets(c *gin.Context) {
-	// var json DatasetJson
-	// if c.BindJSON(&json) == nil {
-	// 	db.QueryRow(`INSERT INTO datasets(created_at, updated_at)`)
-	// }
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 func CreateDataset(c *gin.Context) {
+	var json Dataset
+	if c.BindJSON(&json) == nil {
+		var datasetId int
+		var emotion string
+		var createdAt time.Time
+		var updatedAt time.Time
+		row := db.QueryRow(`INSERT INTO datasets(created_at, updated_at, emotion)
+			VALUES ($1,$2,$3)`, time.Now(), time.Now(), json.Emotion)
+		row.Scan(&datasetId, &createdAt, &updatedAt, &emotion)
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
