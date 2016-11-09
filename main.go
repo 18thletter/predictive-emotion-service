@@ -120,7 +120,6 @@ func CreateHeartbeat(c *gin.Context) {
 func CreateEmotion(c *gin.Context) {
 	var json Emotion
 	if c.BindJSON(&json) == nil {
-		log.Println(json.Emotion)
 		db.QueryRow("INSERT INTO emotions(emotion) VALUES($1)", json.Emotion)
 	}
 	c.JSON(http.StatusOK, gin.H{"emotion": json.Emotion})
