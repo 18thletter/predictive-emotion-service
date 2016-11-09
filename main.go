@@ -89,33 +89,33 @@ func checkErr(err error, msg string) {
 }
 
 func GetAllDatasets(c *gin.Context) {
-	c.JSON(http.StatusOK, "{}")
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func CreateDataset(c *gin.Context) {
-	c.JSON(http.StatusOK, "{}")
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func GetDataset(c *gin.Context) {
-	c.JSON(http.StatusOK, "{}")
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func CreateHeartbeat(c *gin.Context) {
-	c.JSON(http.StatusOK, "{}")
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func CreateEmotion(c *gin.Context) {
-	c.JSON(http.StatusOK, "{}")
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func GetAllEmotions(c *gin.Context) {
-	c.JSON(http.StatusOK, "{}")
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func CorrectDataset(c *gin.Context) {
-	c.JSON(http.StatusOK, "{}")
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func GetPrediction(c *gin.Context) {
-	c.JSON(http.StatusOK, "{}")
+	c.JSON(http.StatusOK, gin.H{})
 }
