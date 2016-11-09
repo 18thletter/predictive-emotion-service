@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"fmt"
+	// "fmt"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
