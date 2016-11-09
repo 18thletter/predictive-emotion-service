@@ -52,7 +52,7 @@ func main() {
 func migrateFunc(c *gin.Context) {
 	if _, err := db.Exec(`
 			CREATE TABLE IF NOT EXISTS datasets (
-				id int SERIAL PRIMARY KEY,
+				id serial PRIMARY KEY,
 				created_at timestamp,
 				updated_at timestamp,
 				emotion_id REFERENCES emotions (id)
@@ -65,7 +65,7 @@ func migrateFunc(c *gin.Context) {
 
 	if _, err := db.Exec(`
 			CREATE TABLE IF NOT EXISTS heartbeats (
-				id int SERIAL PRIMARY KEY,
+				id serial PRIMARY KEY,
 				start timestamp,
 				end timestamp
 			)
@@ -77,7 +77,7 @@ func migrateFunc(c *gin.Context) {
 
 	if _, err := db.Exec(`
 			CREATE TABLE IF NOT EXISTS emotions (
-				id int SERIAL PRIMARY KEY,
+				id serial PRIMARY KEY,
 				emotion character varying(255)
 			)
 		`); err != nil {
