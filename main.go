@@ -89,12 +89,12 @@ func checkErr(err error, msg string) {
 
 // Dataset binding from JSON
 type DatasetJson struct {
-	Emotion string `json:"emotion" binding:"required"`
-	Time string `json:"time" binding:"required"`
+	Emotion string `form:"emotion" json:"emotion" binding:"required"`
+	Time string `form:"emotion" json:"time" binding:"required"`
 }
 
 type Emotion struct {
-	emotion string `json:"emotion" binding:"required"`
+	emotion string `form:"emotion" json:"emotion" binding:"required"`
 }
 
 func GetAllDatasets(c *gin.Context) {
