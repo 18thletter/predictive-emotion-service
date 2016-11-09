@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -20,11 +19,7 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
-	var err error
-	db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatalf("Error opening database: %q", err)
-	}
+	// Initialize the database
 
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -35,9 +30,6 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl.html", nil)
 	})
-
-	// Database migrations (heroku)
-	// router.POST("/migrate", MigrateFunc)
 
 	// Group v1 API resources
 	v1 := router.Group("/v1")
@@ -55,45 +47,43 @@ func main() {
 	router.Run(":" + port)
 }
 
-func MigrateFunc(c *gin.Context) {
+func initDb() {
+	var err error
+	db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	checkErr(err, "Error opening database")
 
-	if _, err := db.Exec(`
-			CREATE TABLE IF NOT EXISTS emotions (
-				id serial PRIMARY KEY,
-				emotion character varying(255)
-			)
-		`); err != nil {
-		c.JSON(http.StatusInternalServerError,
-			fmt.Sprintf("Error creating database table: %q", err))
-		return
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS emotions (
+			id serial PRIMARY KEY,
+			emotion character varying(255)
+		)
+	`)
+	checkErr(err, "Error creating table")
+
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS heartbeats (
+			id serial PRIMARY KEY,
+			start_time timestamp,
+			end_time timestamp
+		)
+	`)
+	checkErr(err, "Error creating table")
+
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS datasets (
+			id serial PRIMARY KEY,
+			created_at timestamp,
+			updated_at timestamp,
+			emotion_id int REFERENCES emotions (id)
+		)
+	`)
+	checkErr(err, "Error creating table")
+}
+
+func checkErr(err error, msg string) {
+	if err != nil {
+		log.Fatalf(msg + ": %q", err)
 	}
-
-	if _, err := db.Exec(`
-			CREATE TABLE IF NOT EXISTS heartbeats (
-				id serial PRIMARY KEY,
-				start_time timestamp,
-				end_time timestamp
-			)
-		`); err != nil {
-		c.JSON(http.StatusInternalServerError,
-			fmt.Sprintf("Error creating database table: %q", err))
-		return
-	}
-
-	if _, err := db.Exec(`
-			CREATE TABLE IF NOT EXISTS datasets (
-				id serial PRIMARY KEY,
-				created_at timestamp,
-				updated_at timestamp,
-				emotion_id int REFERENCES emotions (id)
-			)
-		`); err != nil {
-		c.JSON(http.StatusInternalServerError,
-			fmt.Sprintf("Error creating database table: %q", err))
-		return
-	}
-
-	c.JSON(http.StatusOK, "{}")
 }
 
 func GetAllDatasets(c *gin.Context) {
