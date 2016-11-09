@@ -21,12 +21,6 @@
 			"revisionTime": "2016-10-12T14:51:06Z"
 		},
 		{
-			"checksumSHA1": "uw9OdZcRwy06zC5rlpyBDfx0ue8=",
-			"path": "github.com/go-gorp/gorp",
-			"revision": "88f3ff2c0d5eb7b20af1b6b4d2051d7ddfffadb0",
-			"revisionTime": "2016-07-17T18:45:58Z"
-		},
-		{
 			"checksumSHA1": "oJGkod8y/3GTbKfazzQM+nQOPR0=",
 			"path": "github.com/golang/protobuf/proto",
 			"revision": "2bc9827a78f95c6665b5fe0abd1fd66b496ae2d8",
