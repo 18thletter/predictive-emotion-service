@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
+	"github.com/go-gorp/gorp"
 )
 
 var db *sql.DB
@@ -20,11 +21,9 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
-	var err error
-	db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatalf("Error opening database: %q", err)
-	}
+	// Initialize the DB
+	dbmap := initDb()
+	defer dbmap.Db.Close()
 
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -55,6 +54,41 @@ func main() {
 	router.Run(":" + port)
 }
 
+func initDb() *gorp.DbMap {
+	// Open the database connection
+	var err error
+	db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatalf("Error opening database: %q", err)
+	}
+  checkErr(err, "Failed to create a database connection.")
+
+	// construct a gorp DbMap
+	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
+
+	dbmap.AddTableWithName(Dataset{}, "datasets").SetKeys(true, "Id")
+
+	err = dbmap.CreateTablesIfNotExists()
+	checkErr(err, "Failed to initialize database.")
+
+	return dbmap
+}
+
+// Check for error returns from the database
+func checkErr(err error, msg string) {
+	if err != nil {
+		log.Fatalln(msg, err)
+	}
+}
+
+type Dataset struct {
+	Id int64 `db:id`
+	Created int64 `db:created_at`
+	Updated int64 `db:updated_at`
+	EmotionId int64 `db:emotion_id`
+}
+
+// Create the database tables
 func MigrateFunc(c *gin.Context) {
 
 	if _, err := db.Exec(`
