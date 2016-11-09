@@ -52,6 +52,7 @@ func initDb() {
 	var err error
 	db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	checkErr(err, "Error opening database")
+	log.Println("Connected to PostreSQL database.")
 
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS emotions (
