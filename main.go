@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"math/rand"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -147,5 +148,11 @@ func CorrectDataset(c *gin.Context) {
 }
 
 func GetPrediction(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"emotion": "happy"})
+	emotions := []string{
+		"angry",
+		"happy",
+		"sad",
+		"excited",
+	}
+	c.JSON(http.StatusOK, gin.H{"emotion": emotions[rand.Intn(len(emotions))]})
 }
