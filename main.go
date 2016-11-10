@@ -154,9 +154,8 @@ func GetPrediction(c *gin.Context) {
 		"sad",
 		"excited",
 	}
-	query := c.DefaultQuery("e", "happy")
-	var emotion string
-	if (query == "rand") {
+	emotion := c.DefaultQuery("e", "happy")
+	if (emotion == "rand") {
 		emotion = emotions[rand.Intn(len(emotions))]
 	}
 	c.JSON(http.StatusOK, gin.H{"emotion": emotion})
