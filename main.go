@@ -147,5 +147,5 @@ func CorrectDataset(c *gin.Context) {
 }
 
 func GetPrediction(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"happy"})
+	c.JSON(http.StatusOK, gin.H{"emotion": "happy"})
 }
