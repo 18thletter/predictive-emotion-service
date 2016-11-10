@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"math/rand"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
 
 var db *sql.DB
+var inMemoryState string
 
 func main() {
 	port := os.Getenv("PORT")
@@ -81,6 +81,7 @@ func initDb() {
 		)
 	`)
 	checkErr(err, "Error creating table")
+	inMemoryState = ""
 }
 
 func checkErr(err error, msg string) {
@@ -148,15 +149,12 @@ func CorrectDataset(c *gin.Context) {
 }
 
 func GetPrediction(c *gin.Context) {
-	emotions := []string{
-		"angry",
-		"happy",
-		"sad",
-		"excited",
+	emotion := c.Query("e")
+	if (emotion == "" && inMemoryState == "") {
+		emotion = "happy"
+	} else if (emotion == "" && inMemoryState != "") {
+		emotion = inMemoryState
 	}
-	emotion := c.DefaultQuery("e", "happy")
-	if (emotion == "rand") {
-		emotion = emotions[rand.Intn(len(emotions))]
-	}
+	inMemoryState = emotion
 	c.JSON(http.StatusOK, gin.H{"emotion": emotion})
 }
